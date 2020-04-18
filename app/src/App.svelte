@@ -30,9 +30,9 @@ $: setBoard(selected)
 
 
 {#each board.decks as deck}
-<div id="deck"><strong>{deck.title}</strong><br/>
+<div class="deck"><strong>{deck.title}</strong><br/>
 {#each deck.cards as card}
-{card}<br/>
+<div class="card">{card}</div>
 
 
 {/each}
@@ -46,9 +46,21 @@ $: setBoard(selected)
 </main>
 
 <style>
-#deck {
-      width: 20em;
+
+.deck {
+      margin: 5px;
+      padding: 5px;
+      width: 22em;
       border: 1px solid black;
       float: left;
-	}
+      border-radius: 5px;
+}
+
+.card {
+      width: 20em;
+      border: 1px solid black;
+      border-radius: 5px;
+      margin: 10px auto 10px auto;
+      padding: 10px;
+}
 </style>
