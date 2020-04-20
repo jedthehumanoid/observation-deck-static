@@ -62,11 +62,7 @@ func main() {
 	}
 
 	for i, board := range boards {
-		for j, deck := range board.Decks {
-			deck.Cards = cardcabinet.GetCards(cards, deck)
-			// filter by path here...
-			boards[i].Decks[j].Cards = deck.Cards
-		}
+		boards[i] = board.Get(cards)
 	}
 
 	labels := cardcabinet.GetLabels(cards)
