@@ -1,66 +1,57 @@
 <script>
-	export let cards;
-	export let boards;
-	let selected;
-	let board = {title: "",decks:[]}
-	
- function setBoard(title) {
-   for (let b of boards) {
-       if (b.title==title) {
-       	 board=b;
-       }
+  export let cards;
+  export let boards;
+  let selected;
+  let board = { title: "", decks: [] };
+
+  let params = new URLSearchParams(window.location.search);
+
+  let boardname = params.get("board") || "";
+
+  for (let b of boards) {
+    if (b.title == boardname) {
+      board = b;
     }
- }
-
-$: setBoard(selected)
-
+  }
 </script>
 
+<style>
+  .deck {
+    margin: 5px;
+    padding: 5px;
+    width: 22em;
+    border: 1px solid black;
+    float: left;
+    border-radius: 5px;
+  }
+
+  .card {
+    width: 20em;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 10px auto 10px auto;
+    padding: 10px;
+  }
+</style>
+
 <main>
-	<label for="boards">Board:</label><select id="boards" bind:value={selected}>
-	{#each boards as board}
-	       <option value="{board.title}">{board.title}</option>	
-	{/each}
-	</select>
+  {#each boards as board}
+    <a href="?board={board.title}">{board.title}</a>
+    <br />
+  {/each}
+  {boardname}
+  <div id="boards">
 
-	{selected}
+    {#each board.decks as deck}
+      <div class="deck">
+        <strong>{deck.title}</strong>
+        <br />
+        {#each deck.cards as card}
+          <div class="card">{card}</div>
+        {/each}
+      </div>
+    {/each}
 
-	
-<div id="boards">
-
-
-{#each board.decks as deck}
-<div class="deck"><strong>{deck.title}</strong><br/>
-{#each deck.cards as card}
-<div class="card">{card}</div>
-
-
-{/each}
-</div>
-{/each}
-
-
-
-</div>
+  </div>
 
 </main>
-
-<style>
-
-.deck {
-      margin: 5px;
-      padding: 5px;
-      width: 22em;
-      border: 1px solid black;
-      float: left;
-      border-radius: 5px;
-}
-
-.card {
-      width: 20em;
-      border: 1px solid black;
-      border-radius: 5px;
-      margin: 10px auto 10px auto;
-      padding: 10px;
-}
-</style>

@@ -5,6 +5,7 @@ import (
 	"github.com/jedthehumanoid/card-cabinet"
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 )
 
 type Config struct {
@@ -20,6 +21,14 @@ func loadConfig(file string) Config {
 	return config
 }
 
+// load config
+// getfiles
+// get cards from files
+// get boars from files
+// remove path from cards
+// remove path from boards
+// --for all decks add path from board
+
 func main() {
 
 	config := loadConfig("cabinet.toml")
@@ -29,12 +38,46 @@ func main() {
 	}
 	config.Src = filepath.Clean(config.Src) + "/"
 
-	cards, boards := cardcabinet.ReadDir(config.Src)
+	files := cardcabinet.FindFiles(config.Src)
+
+	cards := cardcabinet.ReadCards(files)
+	boards := cardcabinet.ReadBoards(files)
+
+	for i, _ := range cards {
+		cards[i].Title = strings.TrimPrefix(cards[i].Title, config.Src)
+	}
+
+	for i, _ := range boards {
+		boards[i].Title = strings.TrimPrefix(boards[i].Title, config.Src)
+	}
+
+	// Add board dir for each card in deck
+	for i, board := range boards {
+		boarddir := cardcabinet.GetPath(board.Title)
+		for j, deck := range board.Decks {
+			for k, card := range deck.Cards {
+				boards[i].Decks[j].Cards[k] = boarddir + card
+			}
+		}
+	}
+
+	for i, board := range boards {
+		for j, deck := range board.Decks {
+			deck.Cards = cardcabinet.GetCards(cards, deck)
+			// filter by path here...
+			boards[i].Decks[j].Cards = deck.Cards
+		}
+	}
+
+	labels := cardcabinet.GetLabels(cards)
+	folders := cardcabinet.GetFolders(cards)
 
 	output := "let data = {\n"
 
 	output += "cards: " + toJSON(cards) + ",\n"
-	output += "boards: " + toJSON(boards) + "\n"
+	output += "boards: " + toJSON(boards) + ",\n"
+	output += "folders: " + toJSON(folders) + ",\n"
+	output += "labels: " + toJSON(labels) + "\n"
 	output += "}\n"
 	ioutil.WriteFile("data.js", []byte(output), 0644)
 }
