@@ -8,3 +8,5 @@ Kanban-style static issue/task board based on card-cabinet.
 go build
 cd app && npm run build
 ```
+
+Open app/public/index.html
