@@ -6,7 +6,10 @@ Kanban-style static issue/task board based on card-cabinet.
 
 ```bash
 go build
-cd app && npm run build
+cd app
+npm install
+npm run build
+cd ..
 ```
 
 Open app/public/index.html
