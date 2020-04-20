@@ -51,16 +51,6 @@ func main() {
 		boards[i].Title = strings.TrimPrefix(boards[i].Title, config.Src)
 	}
 
-	// Add board dir for each card in deck
-	for i, board := range boards {
-		boarddir := cardcabinet.GetPath(board.Title)
-		for j, deck := range board.Decks {
-			for k, card := range deck.Cards {
-				boards[i].Decks[j].Cards[k] = boarddir + card
-			}
-		}
-	}
-
 	for i, board := range boards {
 		boards[i] = board.Get(cards)
 	}
